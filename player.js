@@ -36,6 +36,7 @@ function embedFor(link, autoplay = false) {
 
 const list = document.getElementById('tracks');
 const player = document.getElementById('player');
+const previousButton = document.getElementById('previous');
 const nextButton = document.getElementById('next');
 const queue = [];
 const apis = {};
@@ -217,6 +218,9 @@ function selectSong(index, autoplay = false) {
   active = session;
   session.link.setAttribute('aria-current', 'true');
   session.link.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  previousButton.disabled = index === 0;
+  previousButton.title = previousButton.disabled ? 'Start of tracklist' : queue[index - 1].song.label;
+  previousButton.setAttribute('aria-label', previousButton.disabled ? 'Previous song — start of tracklist' : `Previous song: ${queue[index - 1].song.label}`);
   nextButton.disabled = index === queue.length - 1;
   nextButton.title = nextButton.disabled ? 'End of tracklist' : queue[index + 1].song.label;
   nextButton.setAttribute('aria-label', nextButton.disabled ? 'Next song — end of tracklist' : `Next song: ${queue[index + 1].song.label}`);
@@ -260,6 +264,7 @@ for (const songs of tracks) {
   list.append(row);
 }
 
+previousButton.addEventListener('click', () => { if (active && active.index > 0) selectSong(active.index - 1, true); });
 nextButton.addEventListener('click', () => { if (active) advance(active); });
 if (queue.length) selectSong(0);
 // Prepare Spotify while the opening SoundCloud track plays, without starting audio.

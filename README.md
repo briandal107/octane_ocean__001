@@ -10,7 +10,7 @@ python3 -m http.server 8000
 
 ## Playback order
 
-Start the first song in its widget. The page then requests playback of the next linked song when the current provider reports completion. Both songs on a `w/` line are separate queue entries, in the displayed order. The small **Next →** button also advances manually. The queue stops at the last song.
+Start the first song in its widget. The page then requests playback of the next linked song when the current provider reports completion. Both songs on a `w/` line are separate queue entries, in the displayed order. The small **← Previous** and **Next →** buttons move through the queue manually. Previous is disabled at the first song, and Next is disabled at the last song. The queue does not wrap.
 
 - SoundCloud and YouTube use their official widget APIs and completion events.
 - Spotify uses its iFrame API and advances only after playback has started and a playback update reports reaching the track's duration. A paused track, buffering, or a preview stopping short of the reported duration does not advance the queue. Some Spotify embeds may never report a usable completion update; use Next in that case. This does not unlock full-song playback or bypass Spotify account restrictions.

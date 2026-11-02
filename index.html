@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tracklist</title>
-  <link rel="stylesheet" href="style.css?v=playlist-1">
+  <link rel="stylesheet" href="style.css?v=playlist-2">
   <script src="tracks.js?v=credits-1" defer></script>
-  <script src="player.js?v=playlist-1" defer></script>
+  <script src="player.js?v=playlist-2" defer></script>
 </head>
 <body>
   <main>
@@ -17,7 +17,10 @@
     <section class="player-column" aria-label="Selected song">
       <div class="player-widget">
         <div id="player" aria-live="polite"></div>
-        <div class="player-controls"><button id="next" type="button" disabled>Next →</button></div>
+        <div class="player-controls">
+          <button id="previous" type="button" disabled>← Previous</button>
+          <button id="next" type="button" disabled>Next →</button>
+        </div>
       </div>
     </section>
   </main>

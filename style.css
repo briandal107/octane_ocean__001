@@ -17,8 +17,8 @@ a:focus-visible, button:focus-visible { outline: 1px solid currentColor; outline
 .player-column { display: flex; align-items: center; border-left: 1px solid #e8e6df; padding: 0 40px; }
 .player-widget { width: 100%; }
 #player { padding: 0; width: 100%; }
-.player-controls { display: flex; justify-content: flex-end; padding-top: 14px; }
-button { padding: 4px 0 4px 10px; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.player-controls { display: flex; justify-content: space-between; padding-top: 14px; }
+button { padding: 4px 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
 button:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 4px; }
 button:disabled { color: #aaa79f; cursor: default; }
 .player-loading { display: flex; align-items: center; justify-content: center; height: 100%; color: #9a9891; }
