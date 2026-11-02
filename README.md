@@ -18,10 +18,12 @@ Start the first song in its widget. The page then requests playback of the next 
 
 Automatic playback is best effort: browsers can reject play requests, and external provider scripts may fail to load. Native widgets and Next remain available in those cases. The page does not guess song endings from elapsed time. It starts silently on initial page load.
 
+While a provider reports playback, the song turns cerulean, its row indents slightly, and a play icon replaces the row number. Pausing, buffering, finishing, or changing songs clears this styling. On mixed lines only the playing song and its acapella annotation turn blue. Drive previews and embeds with unavailable playback APIs retain the selected-song underline because their playing/paused state is unavailable.
+
 ## Link status
 
 All 56 songs across 52 tracklist entries have source links: 52 Spotify tracks, two SoundCloud tracks, one YouTube video, and one Google Drive audio file. Both songs on each of the four `w/` lines are independently clickable. Supplied links are preserved, with Spotify sharing parameters removed.
 
-Browser checks verified progression through all 56 songs, provider completion handlers, duplicate and stale event handling, pause/buffer/preview safeguards, rejected autoplay, blocked or delayed APIs, keyboard controls, the final queue entry, and fixed header/player layout at six viewport widths. Provider SDKs and media were mocked: this cloud environment blocks live provider access, so real playback and the public Google Drive audio preview remain unverified. The visitor's browser loads each provider directly.
+Browser checks verified progression through all 56 songs, provider completion handlers, duplicate and stale event handling, playing/paused styling, pause/buffer/preview safeguards, rejected autoplay, blocked or delayed APIs, keyboard controls, the final queue entry, and fixed header/player layout at six viewport widths. Provider SDKs and media were mocked: this cloud environment blocks live provider access, so real playback and the public Google Drive audio preview remain unverified. The visitor's browser loads each provider directly.
 
 When changing the CSS or player script, update its `?v=` value in `index.html` so returning visitors fetch the matching assets.

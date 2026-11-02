@@ -82,6 +82,12 @@ function attempt(action) {
   try { Promise.resolve(action()).catch(() => {}); } catch { /* Keep manual controls usable. */ }
 }
 
+function setPlaying(session, playing) {
+  if (session !== active) return;
+  session.row.classList.toggle('is-playing', playing);
+  session.text.classList.toggle('is-playing', playing);
+}
+
 function advance(session) {
   if (session !== active || session.finished || session.index === queue.length - 1) return;
   session.finished = true; // Ignore duplicate end events from a departing player.
@@ -106,10 +112,18 @@ async function connectSoundCloud(session, frame) {
     const widget = api.Widget(frame);
     const events = api.Widget.Events;
     session.cleanup = () => {
-      [events.READY, events.PLAY, events.FINISH].forEach(event => widget.unbind(event));
+      [events.READY, events.PLAY, events.PAUSE, events.FINISH].forEach(event => widget.unbind(event));
     };
-    widget.bind(events.PLAY, () => { if (session === active) session.started = true; });
-    widget.bind(events.FINISH, () => { if (session.started) advance(session); });
+    widget.bind(events.PLAY, () => {
+      if (session !== active) return;
+      session.started = true;
+      setPlaying(session, true);
+    });
+    widget.bind(events.PAUSE, () => setPlaying(session, false));
+    widget.bind(events.FINISH, () => {
+      setPlaying(session, false);
+      if (session.started) advance(session);
+    });
     widget.bind(events.READY, () => {
       if (session === active && session.autoplay) attempt(() => widget.play());
     });
@@ -127,9 +141,11 @@ async function connectYouTube(session, frame) {
         },
         onStateChange: event => {
           if (session !== active) return;
+          setPlaying(session, event.data === api.PlayerState.PLAYING);
           if (event.data === api.PlayerState.PLAYING) session.started = true;
           if (event.data === api.PlayerState.ENDED && session.started) advance(session);
-        }
+        },
+        onError: () => setPlaying(session, false)
       }
     });
     session.cleanup = () => widget.destroy();
@@ -157,6 +173,7 @@ async function connectSpotify(session, embed) {
     if (session !== active || !pending) return;
     pending = false;
     clearTimeout(timeout);
+    setPlaying(session, false);
     if (controller) attempt(() => controller.destroy());
     session.cleanup = () => {};
     makeFrame(session, embed);
@@ -190,7 +207,8 @@ async function connectSpotify(session, embed) {
         controller.addListener('playback_update', event => {
           if (session !== active || !pending) return;
           const { position, duration, isPaused, isBuffering } = event.data || {};
-          if (isBuffering) return;
+          if (isBuffering) { setPlaying(session, false); return; }
+          if (typeof isPaused === 'boolean') setPlaying(session, !isPaused);
           if (isPaused === false) {
             session.started = true;
             clearTimeout(timeout);
@@ -198,7 +216,10 @@ async function connectSpotify(session, embed) {
           // Spotify has no documented "ended" event. Only advance on a reported end;
           // never use a guessed timer (which would skip paused/buffering tracks).
           if (session.started && Number.isFinite(position) && Number.isFinite(duration) &&
-              duration > 0 && position >= duration) advance(session);
+              duration > 0 && position >= duration) {
+            setPlaying(session, false);
+            advance(session);
+          }
         });
       } catch { fallback(); }
     });
@@ -210,6 +231,7 @@ function selectSong(index, autoplay = false) {
   if (!entry || active?.index === index) return;
   if (active) {
     const previous = active;
+    setPlaying(previous, false);
     active = null; // Cleanup can emit events synchronously; they belong to the old song.
     previous.link.removeAttribute('aria-current');
     attempt(previous.cleanup);
@@ -244,13 +266,15 @@ for (const songs of tracks) {
       separator.textContent = 'w/';
       row.append(separator);
     }
+    const text = document.createElement('span');
+    text.className = 'song';
     const playable = song.url && embedFor(song.url);
     const element = document.createElement(playable ? 'a' : 'span');
     element.textContent = song.label;
     if (playable) {
       element.href = song.url;
       const queueIndex = queue.length;
-      queue.push({ song, link: element });
+      queue.push({ song, link: element, row, text });
       element.addEventListener('click', event => {
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
@@ -259,8 +283,9 @@ for (const songs of tracks) {
     } else {
       element.className = 'unavailable';
     }
-    row.append(element);
-    if (song.acapella) row.append(' (acapella)');
+    text.append(element);
+    if (song.acapella) text.append(' (acapella)');
+    row.append(text);
   });
   list.append(row);
 }
