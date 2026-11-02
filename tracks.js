@@ -98,7 +98,7 @@ const tracks = [
   ],
   [
     {
-      "label": "aaron hibell, felsmann & tilsey - levitation (icelandic mix)",
+      "label": "aaron hibell, felsmann + tiley - levitation (icelandic mix)",
       "url": "https://open.spotify.com/track/4J7wpgfDHmHilv7cgQ8t9s"
     },
     {
@@ -190,13 +190,13 @@ const tracks = [
   ],
   [
     {
-      "label": "playboi carti - evilj0rdan",
+      "label": "playboi carti - evil j0rdan",
       "url": "https://open.spotify.com/track/6iycYUk3oB0NPMdaDUrN1w"
     }
   ],
   [
     {
-      "label": "esdeekid, fimi - tartan",
+      "label": "esdeekid, fimiguerrero - tartan",
       "url": "https://open.spotify.com/track/1r7dV486KA1fMo2w1voblx"
     }
   ],
@@ -306,7 +306,7 @@ const tracks = [
   ],
   [
     {
-      "label": "lana del rey, simone, melo nada - say yes to heaven remix",
+      "label": "lana del rey, sim0ne, melo nada - say yes to heaven remix",
       "url": "https://open.spotify.com/track/2A7n6aoRd0pxfwasvN4Fh9"
     }
   ],
