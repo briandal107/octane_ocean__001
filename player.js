@@ -260,6 +260,7 @@ for (const songs of tracks) {
       element.className = 'unavailable';
     }
     row.append(element);
+    if (song.acapella) row.append(' (acapella)');
   });
   list.append(row);
 }

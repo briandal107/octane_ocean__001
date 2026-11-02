@@ -103,6 +103,7 @@ const tracks = [
     },
     {
       "label": "rihanna - diamonds",
+      "acapella": true,
       "url": "https://open.spotify.com/track/1z9kQ14XBSN0r2v6fx4IdG"
     }
   ],
@@ -119,6 +120,7 @@ const tracks = [
     },
     {
       "label": "charli xcx - ss26",
+      "acapella": true,
       "url": "https://open.spotify.com/track/0g8FizeHVo2cG7qxBfmckf"
     }
   ],
@@ -261,6 +263,7 @@ const tracks = [
     },
     {
       "label": "chrystal, notion - the days",
+      "acapella": true,
       "url": "https://open.spotify.com/track/2OQr262OEu2qWhaDjUydgO"
     }
   ],
@@ -283,6 +286,7 @@ const tracks = [
     },
     {
       "label": "charli xcx - dying for you",
+      "acapella": true,
       "url": "https://open.spotify.com/track/0T3sHoiR3t9HtwbIOgTI7J"
     }
   ],
