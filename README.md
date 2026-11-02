@@ -8,8 +8,20 @@ python3 -m http.server 8000
 
 `tracks.js` holds the ordered songs and their full-song URLs. Each song in a `w/` pairing has its own URL. A null URL renders as unlinked text. The player supports Spotify tracks, YouTube videos, SoundCloud tracks, and Google Drive file previews; selecting another song removes the previous player to stop its audio. Modified clicks open the source URL normally.
 
+## Playback order
+
+Start the first song in its widget. The page then requests playback of the next linked song when the current provider reports completion. Both songs on a `w/` line are separate queue entries, in the displayed order. The small **Next →** button also advances manually. The queue stops at the last song.
+
+- SoundCloud and YouTube use their official widget APIs and completion events.
+- Spotify uses its iFrame API and advances only after playback has started and a playback update reports reaching the track's duration. A paused track, buffering, or a preview stopping short of the reported duration does not advance the queue. Some Spotify embeds may never report a usable completion update; use Next in that case. This does not unlock full-song playback or bypass Spotify account restrictions.
+- Google Drive's preview does not expose a supported completion event. Use Next after the WAV finishes.
+
+Automatic playback is best effort: browsers can reject play requests, and external provider scripts may fail to load. Native widgets and Next remain available in those cases. The page does not guess song endings from elapsed time. It starts silently on initial page load.
+
 ## Link status
 
 All 56 songs across 52 tracklist entries have source links: 52 Spotify tracks, two SoundCloud tracks, one YouTube video, and one Google Drive audio file. Both songs on each of the four `w/` lines are independently clickable. Supplied links are preserved, with Spotify sharing parameters removed.
 
-Browser checks verified every song selects its matching embedded player, revised credits and the insertion of “come get her” after “zeze,” one active iframe at a time, keyboard activation, and the mobile layout. External player requests were mocked during these checks; provider availability, playback, and the public Google Drive audio preview still need live verification. No link lookup access is needed to use the supplied URLs; the visitor’s browser loads each provider directly.
+Browser checks verified progression through all 56 songs, provider completion handlers, duplicate and stale event handling, pause/buffer/preview safeguards, rejected autoplay, blocked or delayed APIs, keyboard controls, the final queue entry, and fixed header/player layout at six viewport widths. Provider SDKs and media were mocked: this cloud environment blocks live provider access, so real playback and the public Google Drive audio preview remain unverified. The visitor's browser loads each provider directly.
+
+When changing the CSS or player script, update its `?v=` value in `index.html` so returning visitors fetch the matching assets.
